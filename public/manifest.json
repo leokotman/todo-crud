@@ -1,0 +1,9 @@
+{
+    "short_name": "Todo crud",
+    "name": "Todo List app with edit/delete functionality",
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+}
+  
