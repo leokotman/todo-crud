@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "antd";
+import { Button, Divider, List, Empty } from "antd";
 import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
 import "./App.css";
 
@@ -24,24 +24,25 @@ function App() {
     setTodo(event.target.value);
   }
   function editInputChange(event) {
-      setCurrentTodo({ ...currentTodo, text: event.target.value });
+    setCurrentTodo({ ...currentTodo, text: event.target.value });
   }
   function handleFormSubmit(event) {
-      event.preventDefault();
-      if (todo !== "") {
-        setTodos([
-          ...todos,
-          {
-            id: todos.length + 1,
-            text: todo.trim(),
-          },
-        ]);
-      }
-      setTodo("");
+    event.preventDefault();
+    if (todo !== "") {
+      setTodos([
+        ...todos,
+        {
+          id: todos.length + 1,
+          text: todo.trim(),
+        },
+      ]);
+    }
+    setTodo("");
   }
   function editFormSubmit(event) {
-      event.preventDefault();
-      updateTodo(currentTodo.id, currentTodo);
+    console.log("input edited");
+    event.preventDefault();
+    updateTodo(currentTodo.id, currentTodo);
   }
 
   function handleDeleteClick(itemId) {
@@ -60,19 +61,29 @@ function App() {
   }
   function handleEditClick(todo) {
     setIsEditing(true);
-    setCurrentTodo({...todo});
+    setCurrentTodo({ ...todo });
   }
-  
+
   return (
     <div className="App">
       <h1>Todo App</h1>
-      { isEditing ? (
+      {isEditing ? (
         <form onSubmit={editFormSubmit}>
           <h2>Edit Todo</h2>
           <label htmlFor="editTodo">Edit todo:</label>
-          <input type="text" name="editTodo" placeholder="Edit todo" value={currentTodo.text} onChange={editInputChange} />
-          <Button onClick={() => editFormSubmit}>Update</Button>
-          <Button type="dashed" onClick={() => setIsEditing(false)}>Cancel</Button>
+          <input
+            type="text"
+            name="editTodo"
+            placeholder="Edit todo"
+            value={currentTodo.text}
+            onChange={editInputChange}
+          />
+          <Button type="default" onClick={editFormSubmit}>
+            Update
+          </Button>
+          <Button type="dashed" onClick={() => setIsEditing(false)}>
+            Cancel
+          </Button>
         </form>
       ) : (
         <form onSubmit={handleFormSubmit}>
@@ -85,27 +96,37 @@ function App() {
             value={todo}
             onChange={handleInputChange}
           />
-          <Button type="primary" onClick={handleFormSubmit}>Add</Button>
+          <Button type="primary" onClick={handleFormSubmit}>
+            Add
+          </Button>
         </form>
       )}
 
-      <ul className="todo_list">
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            {todo.text}
-            <Button onClick={() => handleEditClick(todo)}>
-              <EditTwoTone />
-            </Button>
-            <Button
-              type="dashed"
-              shape="round"
-              onClick={() => handleDeleteClick(todo.id)}
-            >
-              <DeleteTwoTone />
-            </Button>
-          </li>
-        ))}
-      </ul>
+      <Divider orientation="center">Todos</Divider>
+
+      <List
+        bordered
+        dataSource={todos}
+        renderItem={(item) =>
+          todos.length === 0 ? (
+            <Empty description={false} />
+          ) : (
+            <List.Item>
+              {item.text}
+              <Button onClick={() => handleEditClick(item)}>
+                <EditTwoTone />
+              </Button>
+              <Button
+                type="dashed"
+                shape="round"
+                onClick={() => handleDeleteClick(item.id)}
+              >
+                <DeleteTwoTone />
+              </Button>
+            </List.Item>
+          )
+        }
+      />
     </div>
   );
 }
