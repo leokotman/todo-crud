@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Divider, List, Empty } from "antd";
+import { Divider, List, Empty } from "antd";
 import "./App.css";
 
 import TodoItem from "./components/TodoItem.jsx";
+import AddTodoForm from "./components/AddTodoForm.jsx";
+import EditTodoForm from "./components/EditTodoForm.jsx";
 
 function App() {
   const [todos, setTodos] = useState(() => {
@@ -47,14 +49,16 @@ function App() {
   }
 
   function handleDeleteClick(itemId) {
-    if(window.confirm("Are you sure you want to delete it?")) {
-        const deleteItem = todos.filter((todo) => {
+    if (window.confirm("Are you sure you want to delete it?")) {
+      const itemToDelete = todos.find((elem) => elem.id === itemId);
+      console.log("You deleted todo: " + itemToDelete.text);
+      const deleteItem = todos.filter((todo) => {
         return todo.id !== itemId;
-        });
-        setTodos(deleteItem);
+      });
+      setTodos(deleteItem);
     } else {
-      const notRemovedItem = todos.find(elem => elem.id === itemId);
-      console.log(notRemovedItem.text);
+      const notRemovedItem = todos.find((elem) => elem.id === itemId);
+      console.log("This todo wasn't removed: " + notRemovedItem.text);
     }
   }
 
@@ -74,37 +78,18 @@ function App() {
     <div className="App">
       <h1>Todo App</h1>
       {isEditing ? (
-        <form onSubmit={editFormSubmit}>
-          <h2>Edit Todo</h2>
-          <label htmlFor="editTodo">Edit todo:</label>
-          <input
-            type="text"
-            name="editTodo"
-            placeholder="Edit todo"
-            value={currentTodo.text}
-            onChange={editInputChange}
-          />
-          <Button type="default" onClick={editFormSubmit}>
-            Update
-          </Button>
-          <Button type="dashed" onClick={() => setIsEditing(false)}>
-            Cancel
-          </Button>
-        </form>
+        <EditTodoForm
+          currentTodo={currentTodo}
+          setIsEditing={setIsEditing}
+          editInputChange={editInputChange}
+          editFormSubmit={editFormSubmit}
+        />
       ) : (
-        <form onSubmit={handleFormSubmit}>
-          <h2>Add todo</h2>
-          <input
-            type="text"
-            name="todo"
-            placeholder="New todo"
-            value={todo}
-            onChange={handleInputChange}
-          />
-          <Button type="primary" onClick={handleFormSubmit}>
-            Add
-          </Button>
-        </form>
+        <AddTodoForm
+          todo={todo}
+          handleFormSubmit={handleFormSubmit}
+          handleInputChange={handleInputChange}
+        />
       )}
 
       <Divider orientation="center">Todos</Divider>
