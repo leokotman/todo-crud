@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Divider, List, Empty } from "antd";
-import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
 import "./App.css";
+
+import TodoItem from "./components/TodoItem.jsx";
 
 function App() {
   const [todos, setTodos] = useState(() => {
@@ -46,10 +47,15 @@ function App() {
   }
 
   function handleDeleteClick(itemId) {
-    const deleteItem = todos.filter((todo) => {
-      return todo.id !== itemId;
-    });
-    setTodos(deleteItem);
+    if(window.confirm("Are you sure you want to delete it?")) {
+        const deleteItem = todos.filter((todo) => {
+        return todo.id !== itemId;
+        });
+        setTodos(deleteItem);
+    } else {
+      const notRemovedItem = todos.find(elem => elem.id === itemId);
+      console.log(notRemovedItem.text);
+    }
   }
 
   function updateTodo(id, updatedTodo) {
@@ -103,29 +109,21 @@ function App() {
 
       <Divider orientation="center">Todos</Divider>
 
-
       {todos.length === 0 ? (
-        <Empty description={<span >No todos yet</span> } />
+        <Empty description={<span>No todos yet</span>} />
       ) : (
-      <List
-        bordered
-        dataSource={todos}
-        renderItem={(item) => (
-          <List.Item>
-            {item.text}
-            <Button onClick={() => handleEditClick(item)}>
-              <EditTwoTone />
-            </Button>
-            <Button
-              type="dashed"
-              shape="round"
-              onClick={() => handleDeleteClick(item.id)}
-            >
-              <DeleteTwoTone />
-            </Button>
-          </List.Item>
-        )}
-      ></List>)}
+        <List
+          bordered
+          dataSource={todos}
+          renderItem={(item) => (
+            <TodoItem
+              todo={item}
+              handleEditClick={handleEditClick}
+              handleDeleteClick={handleDeleteClick}
+            />
+          )}
+        ></List>
+      )}
     </div>
   );
 }
