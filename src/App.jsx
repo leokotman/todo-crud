@@ -88,7 +88,6 @@ function App() {
       ) : (
         <form onSubmit={handleFormSubmit}>
           <h2>Add todo</h2>
-          <label htmlFor="todo">Add todo:</label>
           <input
             type="text"
             name="todo"
@@ -104,29 +103,29 @@ function App() {
 
       <Divider orientation="center">Todos</Divider>
 
+
+      {todos.length === 0 ? (
+        <Empty description={<span >No todos yet</span> } />
+      ) : (
       <List
         bordered
         dataSource={todos}
-        renderItem={(item) =>
-          todos.length === 0 ? (
-            <Empty description={false} />
-          ) : (
-            <List.Item>
-              {item.text}
-              <Button onClick={() => handleEditClick(item)}>
-                <EditTwoTone />
-              </Button>
-              <Button
-                type="dashed"
-                shape="round"
-                onClick={() => handleDeleteClick(item.id)}
-              >
-                <DeleteTwoTone />
-              </Button>
-            </List.Item>
-          )
-        }
-      />
+        renderItem={(item) => (
+          <List.Item>
+            {item.text}
+            <Button onClick={() => handleEditClick(item)}>
+              <EditTwoTone />
+            </Button>
+            <Button
+              type="dashed"
+              shape="round"
+              onClick={() => handleDeleteClick(item.id)}
+            >
+              <DeleteTwoTone />
+            </Button>
+          </List.Item>
+        )}
+      ></List>)}
     </div>
   );
 }
